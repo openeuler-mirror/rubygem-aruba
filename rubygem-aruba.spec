@@ -2,14 +2,16 @@
 Summary:             CLI Steps for Cucumber, hand-crafted for you in Aruba
 Name:                rubygem-%{gem_name}
 Version:             0.14.9
-Release:             1
+Release:             2
 License:             MIT
 URL:                 https://github.com/cucumber/aruba
 Source0:             http://rubygems.org/gems/%{gem_name}-%{version}.gem
+Patch0:              Replace-problematic-AnsiColor-module-with-simple.patch
+Patch1:              Silence-keyword-argument-warnings-on-Ruby-2.7.patch
 BuildRequires:       ruby(release) rubygems-devel ruby rubygem(cucumber) >= 1.3.19
 BuildRequires:       rubygem(childprocess) >= 0.5.6 rubygem(ffi) >= 1.9.10 rubygem(minitest)
 BuildRequires:       rubygem(pry) rubygem(rspec) >= 3 rubygem(contracts) >= 0.9
-BuildRequires:       rubygem(thor) >= 0.19 /usr/bin/python3
+BuildRequires:       rubygem(thor) >= 0.19 /usr/bin/python3 ruby-irb
 BuildArch:           noarch
 %description
 Aruba is Cucumber extension for Command line applications written
@@ -25,6 +27,8 @@ Documentation for %{name}
 %prep
 %setup -q -n %{gem_name}-%{version}
 %gemspec_remove_dep -g childprocess '>= 0.6.3'
+%patch0 -p1
+%patch1 -p1
 
 %build
 gem build ../%{gem_name}-%{version}.gemspec
@@ -105,5 +109,8 @@ popd
 %{gem_instdir}/templates/
 
 %changelog
+* Mon Feb 21 2022 liyanan <liyanan32@huawei.com> - 0.14.9-2
+- fix build error
+
 * Wed Aug 19 2020 shenleizhao <shenleizhao@huawei.com> - 0.14.9-1
 - package init
